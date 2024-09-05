@@ -1,3 +1,4 @@
 bundle install
 bundle exec pod keys set "ApiKey" "86ae97a3558b4cf72ad2009065955038"
+bundle exec pod keys set "AuthKey" "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI4NmFlOTdhMzU1OGI0Y2Y3MmFkMjAwOTA2NTk1NTAzOCIsIm5iZiI6MTcyNTUzNTk0OC44NjIyMjcsInN1YiI6IjY2ZDk3MDNkZTg0NDVhYTljYTAxOTE4NSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.rtATn9kgtFG3y4iXCR6QLUV2_O9Qa5XzdEjhsx8zDcg"
 pod install 
