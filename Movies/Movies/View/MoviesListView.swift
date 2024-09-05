@@ -12,8 +12,13 @@ struct MoviesListView: View {
     
     var body: some View {
         NavigationView {
-            List(viewModel.movies) {
-                Text($0.title)
+            List(viewModel.movies) { movie in
+                Text(movie.title)
+                    .onAppear {
+                        Task {
+                            await viewModel.loadMoreMovies(id: movie.id)
+                        }
+                    }
             }
         }
         .task {
