@@ -1,5 +1,5 @@
 //
-//  NowPlayingMoviesResponse.swift
+//  MoviesResponse.swift
 //  Movies
 //
 //  Created by Kamil Czajka on 05/09/2024.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct NowPlayingMoviesResponse: Codable {
+struct MoviesResponse: Codable {
     let page: Int
     let results: [Movie]
     let totalPages: Int

@@ -25,6 +25,15 @@ struct MoviesListView: View {
                 }
             }
             .navigationTitle("Now Playing")
+            .searchable(text: $viewModel.searchText, prompt: "Find a movie") {
+                ForEach(viewModel.searchResults) { result in
+                    Text(result.title).searchCompletion(result.title)
+                }
+                .onSubmit(of: .search) {
+                    viewModel.hideSuggestions()
+                }
+            }
+
         }
         .task {
             await viewModel.loadMovies()

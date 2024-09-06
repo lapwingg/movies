@@ -9,8 +9,24 @@ import SwiftUI
 
 class MoviesListViewModel: ObservableObject {
     @Published var movies: [Movie] = []
+    @Published var searchResults: [Movie] = []
+    @Published var searchText: String = "" {
+        didSet {
+            if searchText.isEmpty {
+                currentRunningTask = Task {
+                    await loadMovies()
+                }
+            } else {
+                currentRunningTask = Task {
+                    await searchMovies()
+                }
+            }
+        }
+    }
+
     let networkManager: NetworkManagerType
     
+    private var currentRunningTask: Task<Void, Error>?
     private var canLoadNextPage: Bool = true
     private var currentPage = 0
 
@@ -26,6 +42,10 @@ class MoviesListViewModel: ObservableObject {
     }
     
     func loadMovies() async {
+        guard searchText.isEmpty else {
+            return
+        }
+        
         currentPage += 1
         let queryItems: [URLQueryItem] = [
           URLQueryItem(name: "language", value: "en-US"),
@@ -39,14 +59,52 @@ class MoviesListViewModel: ObservableObject {
         
         if let request = request {
             do {
-                let response = try await networkManager.request(request, of: NowPlayingMoviesResponse.self)
+                let response = try await networkManager.request(request, of: MoviesResponse.self)
                 await MainActor.run {
-                    movies += response.results
+                    if currentPage == 1 {
+                        movies = response.results
+                    } else {
+                        movies += response.results
+                    }
                     canLoadNextPage = response.page < response.totalPages
                 }
             } catch {
                 
             }
         }
+    }
+    
+    func searchMovies() async {
+        let queryItems: [URLQueryItem] = [
+            URLQueryItem(name: "query", value: searchText),
+            URLQueryItem(name: "language", value: "en-US"),
+            URLQueryItem(name: "include_adult", value: "false"),
+            URLQueryItem(name: "page", value: "1")
+        ]
+        
+        let request = URLRequestBuilder()
+            .requestKind(.searchMovies)
+            .queryItems(queryItems)
+            .build()
+        
+        if let request = request {
+            do {
+                let response = try await networkManager.request(request, of: MoviesResponse.self)
+                await MainActor.run {
+                    searchResults = response.results
+                }
+            } catch {
+                
+            }
+        }
+    }
+    
+    func hideSuggestions() {
+        currentRunningTask?.cancel()
+        if let movie = searchResults.first(where: { movie in movie.title == searchText }) {
+            movies = [movie]
+        }
+        searchResults = []
+        currentPage = 0
     }
 }

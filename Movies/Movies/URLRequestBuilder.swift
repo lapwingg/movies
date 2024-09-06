@@ -14,12 +14,16 @@ enum HTTPMethod: String {
 
 enum RequestKind: RawRepresentable {
     case nowPlayingMovies
+    case searchMovies
     case unknown
     
     var rawValue: String {
         switch self {
         case .nowPlayingMovies:
             return "/movie/now_playing"
+            
+        case .searchMovies:
+            return "/search/movie"
             
         case .unknown:
             return ""
@@ -29,6 +33,8 @@ enum RequestKind: RawRepresentable {
     init?(rawValue: String) {
         if rawValue == "/movie/now_playing" {
             self = .nowPlayingMovies
+        } else if rawValue == "/search/movie" {
+            self = .searchMovies
         } else {
             self = .unknown
         }
