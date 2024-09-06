@@ -27,7 +27,7 @@ struct MoviesListView: View {
                     viewModel.onAppear()
                 }
             }
-            .navigationTitle("Now Playing")
+            .navigationBarTitle("Now Playing", displayMode: .inline)
             .searchable(text: $viewModel.searchText, prompt: "Find a movie") {
                 ForEach(viewModel.searchResults) { result in
                     Text(result.title).searchCompletion(result.title)

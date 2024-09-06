@@ -35,7 +35,7 @@ class MovieDetailsViewModel: ObservableObject {
     }
     
     var rating: String {
-        return "\(movie.voteAverage) (\(movie.voteCount))"
+        return "\(String(format: "%0.1f", movie.voteAverage)) (\(movie.voteCount))"
     }
     
     init(
