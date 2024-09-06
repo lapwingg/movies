@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct MovieDetailsView: View {
-    let viewModel: MovieDetailsViewModel
+    @ObservedObject var viewModel: MovieDetailsViewModel
     
     var body: some View {
         NavigationView {
@@ -44,6 +44,14 @@ struct MovieDetailsView: View {
                     .frame(height: geometry.size.height * 0.4)
                 }
                 .frame(width: geometry.size.width, height: geometry.size.height)
+            }
+            .toolbar {
+                Button(action: {
+                    viewModel.set(isFavourite: !viewModel.isFavourite)
+                }, label: {
+                    Image(systemName: viewModel.isFavourite ? "heart.fill" : "heart")
+                        .foregroundColor(.red)
+                })
             }
         }
     }

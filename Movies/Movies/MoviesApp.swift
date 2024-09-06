@@ -12,7 +12,10 @@ struct MoviesApp: App {
     var body: some Scene {
         WindowGroup {
             MoviesListView(
-                viewModel: MoviesListViewModel(networkManager: NetworkManager())
+                viewModel: MoviesListViewModel(
+                    networkManager: NetworkManager(),
+                    favouritesMovies: FavouriteMovies()
+                )
             )
         }
     }

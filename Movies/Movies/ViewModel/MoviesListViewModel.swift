@@ -23,15 +23,22 @@ class MoviesListViewModel: ObservableObject {
             }
         }
     }
+    @Published var updateUI: Bool = false
 
     let networkManager: NetworkManagerType
+    let favouritesMovies: FavouriteMoviesType
     
     private var currentRunningTask: Task<Void, Error>?
     private var canLoadNextPage: Bool = true
     private var currentPage = 0
 
-    init(networkManager: NetworkManagerType) {
+    init(networkManager: NetworkManagerType, favouritesMovies: FavouriteMoviesType) {
         self.networkManager = networkManager
+        self.favouritesMovies = favouritesMovies
+    }
+    
+    func onAppear() {
+        self.updateUI = true
     }
     
     func loadMoreMovies(id: Int) async {
@@ -106,5 +113,14 @@ class MoviesListViewModel: ObservableObject {
         }
         searchResults = []
         currentPage = 0
+    }
+    
+    func isFavourite(movie: Movie) -> Bool {
+        return self.favouritesMovies.isFavouriteMovie(id: movie.id)
+    }
+    
+    func set(isFavourite: Bool, movie: Movie) {
+        self.favouritesMovies.set(isFavourite: isFavourite, for: movie.id)
+        self.updateUI = true
     }
 }
